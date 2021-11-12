@@ -1,4 +1,4 @@
-jsonData = d3.json("/data/samples.json");
+jsonData = d3.json("data/samples.json");
 
 
 function init() {
