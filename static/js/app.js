@@ -78,12 +78,8 @@ function buildCharts(sample) {
     //  so the otu_ids with the most bacteria are last. 
     var yticks = otuIDs.slice(0,10).reverse()
     yticks = yticks.map(items => "OTU " + items.toString());
-    console.log(yticks);
 
     xvalues = sampleValues.slice(0,10).reverse()
-    console.log(xvalues);
-
-    console.log(result);
 
     // 8. Create the trace for the bar chart. 
     let barTrace = {
@@ -91,7 +87,10 @@ function buildCharts(sample) {
       x: xvalues,
       y: yticks,
       orientation:'h',
-      text: otuLabels
+      text: otuLabels,
+      marker: {
+        color: '#FE8F4E'
+      }
     }
     var barData = [
       barTrace
@@ -121,6 +120,49 @@ function buildCharts(sample) {
   
     };
     Plotly.newPlot("bubble", bubbleData);
+
+    // 12. Gauge Plot
+    samples = data.metadata;
+    var resultArray = samples.filter(samples => samples.id == sample);
+    wfreq = resultArray[0].wfreq;
+
+    var data = [
+      {
+        type: "indicator",
+        mode: "gauge+number",
+        value: wfreq,
+        title: { 
+          text: "<b>Belly Button Wash Frequency</b><br>Scrubs per Weeks"},
+        gauge: {
+          axis: { range: [null, 9], visible: false},
+          bar: { 
+            line: {
+              color:'red',
+              width: 3
+            }, 
+            color: "red" },
+          bgcolor: "white",
+          borderwidth: 0,
+          bordercolor: "gray",
+          steps: [
+            { range: [0,1], color: "#FCE9DC", text: '0-1' },
+            { range: [1,2], color: "#FED0B5" },
+            { range: [2,3], color: "#FDC19E" },
+            { range: [3,4], color: "#FEA571"},
+            { range: [4,5], color: "#FE8F4E"},
+            { range: [5,6], color: "#FD6F1C"},
+            { range: [6,7], color: "#FD3403"},
+            { range: [7,8], color: "#DB0303"},
+            { range: [8,9], color: "#A10202"},
+          ]
+        }
+      }
+    ];
+    
+    var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+    Plotly.newPlot('gauge', data, layout);
+
+    
   });
 }
 
